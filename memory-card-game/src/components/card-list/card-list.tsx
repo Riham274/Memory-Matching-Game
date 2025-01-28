@@ -1,19 +1,32 @@
-import { useState } from 'react';
-import { Elevels } from '../../types/@types';
+
+import { ICard } from '../../types/@types';
 import Card from '../card/card';
 import './card-list.css'
-import { createGameBoard } from '../../utils/game.util';
+import { Action } from '../../providers/reducer';
+import { useContext } from 'react';
+import { GameModeContext } from '../../providers/modeProvider';
 
-const CIRRENT_LEVEL = Elevels.MEDIUM;
 
-const CardList = () => {
-    const [cards,setCards] = useState(createGameBoard(CIRRENT_LEVEL));
+interface IProps {
+    cards: ICard[];
+    dispatch:React.Dispatch<Action>;
+}
+
+
+const CardList = (props: IProps) => {
+    const {gameMode} = useContext(GameModeContext);
     return (
-        <div className={`card-list level_${CIRRENT_LEVEL}`}>
+        <div className={`card-list level_${gameMode.level}`}>
             
             {
-              cards.map((card, index) => <Card key={index} data={card} />)
-            }
+              props.cards.map((card, index) => 
+              <Card 
+              key={index} 
+              index={index}
+              data={card} 
+              dispatch={props.dispatch}
+              />
+            ) }
         </div>
     )
 }
